@@ -2,7 +2,7 @@ const inquirer = require('inquirer');
 
 class PromptRunner {
     constructor(queryObject, dbConnection, displayMethod) {
-        this.qys = queryObject;
+        this.queries = queryObject;
         this.db = dbConnection;
         this.display = displayMethod;
         this.mainMenuItems = [
@@ -49,7 +49,7 @@ class PromptRunner {
     }
 
     viewAll(table) {
-        const q = this.qys;
+        const q = this.queries;
         const qMap = {
             'depts': q.getAllDepts,
             'roles': q.getAllRoles,
@@ -59,10 +59,39 @@ class PromptRunner {
             if (err) {
                 console.error(err);
             } else {
+                console.log(result);
                 this.display(result);
                 this.displayMainMenu();
             }
         });
+    }
+
+    addDept(deptName) {
+        inquirer
+            .prompt([
+                {
+                    type: "input",
+                    name: "department",
+                    message: "Enter a department name:",
+                    validate: val => {
+                        this._isValidString(val);
+                        // Also check db for dup Department values
+                    }
+                }
+            ])
+            .then(answer => {
+
+            })
+        }
+
+    _isNotDuplicate(name, table) {
+        const q = this.qys;
+    }
+
+    _isValidString(str) {
+        const s = str.trim();
+        if (!s.trim().length || !isNaN(s)) return "Please enter a valid string value.";
+        return true;
     }
 
     init() {
