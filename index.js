@@ -3,6 +3,9 @@ require('dotenv').config();
 const mysql = require('mysql2');
 const cTable = require('console.table');
 
+const queries = require('./src/query');
+const PromptRunner = require('./src/PromptRunner');
+
 const db = mysql.createConnection(
     {
         host: process.env.DB_HOST,
@@ -13,12 +16,6 @@ const db = mysql.createConnection(
     console.log(`Connected to the ${process.env.DB_NAME} database.`)
 );
 
-db.query('SELECT employee.first_name AS `First Name`, employee.last_name AS `Last Name`, role.title AS `Role`, role.salary AS `Salary` FROM employee JOIN role ON employee.role_id = role.id', (err, result) => {
-    if (err) {
-        console.error(err);
-    } else {
-        console.log(console.table);
-        console.table(result);
-    }
-});
+const employeeManagementSystem = new PromptRunner(queries, db, console.table);
 
+employeeManagementSystem.init();

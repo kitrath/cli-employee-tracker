@@ -34,13 +34,13 @@ class PromptRunner {
         const next = choice.toLowerCase().trim();
         switch (next) {
             case 'view all departments':
-                this.viewAllDepts();
+                this.viewAll('depts');
                 break;
             case 'view all roles':
-                this.viewAllRoles();
+                this.viewAll('roles');
                 break;
             case 'view all employees':
-                this.viewAllEmployees();
+                this.viewAll('employees');
                 break
             default:
                 console.log("That option isn't available right now...");
@@ -48,14 +48,25 @@ class PromptRunner {
         }
     }
 
-    viewAllDepts() {
-        this.db.query(this.qys.getAllDepts(), (err, result) => {
+    viewAll(table) {
+        const q = this.qys;
+        const qMap = {
+            'depts': q.getAllDepts,
+            'roles': q.getAllRoles,
+            'employees': q.getAllEmployees,
+        };
+        this.db.query(qMap[table](), (err, result) => {
             if (err) {
                 console.error(err);
             } else {
-                this.dis
+                this.display(result);
+                this.displayMainMenu();
             }
-        })
+        });
+    }
+
+    init() {
+        this.displayMainMenu();
     }
 }
 
