@@ -290,8 +290,7 @@ class PromptRunner {
 
                 const q = this.queries;
                 const sql = q.updateRole();
-                console.log(q.updateRole());
-                console.log("sql=", sql);
+
                 this.db.query(sql, [roleId, employeeId], (err) => {
                     if (err) {
                         console.error(err);
