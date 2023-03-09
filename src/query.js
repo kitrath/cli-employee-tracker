@@ -9,7 +9,7 @@ const queries = {
     },
 
     getRoles() {
-        return 'SELECT * FROM role';
+        return 'SELECT * FROM role;';
     },
 
     getRolesTruncated() {
@@ -24,6 +24,10 @@ const queries = {
         return 'INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?);';
     },
 
+    updateRole() {
+        return ' UPDATE employee SET employee.role_id=? WHERE employee.id=?';
+    },
+
     getEmployees() {
         return 'SELECT * from employee;';
     },
@@ -34,6 +38,10 @@ const queries = {
 
     getManagers() {
         return 'SELECT id, CONCAT(first_name, \' \', last_name) AS name FROM employee WHERE id IN (SELECT DISTINCT manager_id FROM employee);';
+    },
+
+    getEmployeesFullName() {
+        return 'SELECT id, CONCAT(first_name, \' \', last_name) AS name FROM employee;';
     },
 
     addEmployee() {

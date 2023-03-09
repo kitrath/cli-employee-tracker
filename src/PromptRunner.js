@@ -52,6 +52,9 @@ class PromptRunner {
             case 'add an employee':
                 this.getManagersForAddEmployee();
                 break;
+            case 'update an employee role':
+                this.getDataForUpdateRole(); 
+                break;
             default:
                 console.log("That option isn't available right now...");
                 this.displayMainMenu();
@@ -240,6 +243,66 @@ class PromptRunner {
             });
     }
 
+    getDataForUpdateRole() {
+        let employees;
+
+        const q = this.queries;
+        this.db.query(q.getEmployeesFullName(), (err, result) => {
+            if (err) {
+                console.error(err);
+            } else {
+                employees = result;
+                this.db.query(q.getRoles(), (err, result) => {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        this.updateRole(employees, result);
+                    }
+                });
+            }
+        });
+    }
+    
+    updateRole(employees, roles) {
+        const employeeNames = employees.map(employee => employee.name);
+        const roleNames = roles.map(role => role.title);
+        
+        inquirer
+            .prompt([
+                {
+                    type: "list",
+                    name: "name",
+                    message: "Choose the employee to update:",
+                    choices: employeeNames
+                },
+                {
+                    type: "list",
+                    name: "role",
+                    message: "Choose a new role for this employee:",
+                    choices: roleNames
+                }
+            ])
+            .then(answers => {
+                const employeeName = answers.name.trim();
+                const roleName = answers.role.trim();
+                const employeeId = this._getIdForKeyName('name', employeeName, employees);
+                const roleId = this._getIdForKeyName('title', roleName, roles);
+
+                const q = this.queries;
+                const sql = q.updateRole();
+                console.log(q.updateRole());
+                console.log("sql=", sql);
+                this.db.query(sql, [roleId, employeeId], (err) => {
+                    if (err) {
+                        console.error(err);
+                    } else {
+                        console.log(`\n** ${employeeName} has new role ${roleName} in the database. **\n`);
+                        this.displayMainMenu();
+                    }
+                });
+            });
+    }
+
     _getIdForKeyName(key, name, list) {
         for (const item of list) {
             if (item[key] === name) {
@@ -247,6 +310,7 @@ class PromptRunner {
             }
         }
     }
+
     _isValidString(str) {
         const s = str.trim();
         if (!s.trim().length || !isNaN(s)) return "Please enter a valid string";
