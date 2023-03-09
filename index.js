@@ -13,7 +13,7 @@ const db = mysql.createConnection(
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME
     },
-    console.log(`Connected to the ${process.env.DB_NAME} database.`)
+    console.log(`\n** Connected to the ${process.env.DB_NAME} database. **\n`)
 );
 
 const employeeManagementSystem = new PromptRunner(queries, db, console.table);
