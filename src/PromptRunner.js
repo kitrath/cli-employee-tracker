@@ -51,6 +51,7 @@ class PromptRunner {
                 break;
             case 'add an employee':
                 this.getManagersForAddEmployee();
+                break;
             default:
                 console.log("That option isn't available right now...");
                 this.displayMainMenu();
@@ -114,7 +115,7 @@ class PromptRunner {
 
     addRole(departments) {
         const deptNames = departments.map(elem => elem.name);
-        console.log("deptNames", deptNames);
+
         inquirer
             .prompt([
                 {
@@ -166,9 +167,9 @@ class PromptRunner {
                 console.error(err);
             } else {
                 // results [{ id: , name: <first_name Last_name> }]
-                this.getRolesTruncated(results);
+                this.getRolesForAddEmployee(results);
             }
-        })
+        });
     }
 
     getRolesForAddEmployee(managers) {
@@ -192,13 +193,13 @@ class PromptRunner {
                 {
                     type: "input",
                     name: "first_name",
-                    message: "Enter employee's first name:",
+                    message: "Enter the employee's first name:",
                     validate: val => this._isValidString(val)
                 },
                 {
                     type: "input",
                     name: "last_name",
-                    message: "Enter employee's last name",
+                    message: "Enter the employee's last name:",
                     validate: val => this._isValidString(val)
                 },
                 {
@@ -232,7 +233,7 @@ class PromptRunner {
                     if (err) {
                         console.error(err);
                     } else {
-                        console.log(`\n** Employee ${first_name} ${last_name} added to the database. **\n`);
+                        console.log(`\n** Employee ${firstName} ${lastName} added to the database. **\n`);
                         this.displayMainMenu();
                     }
                 });
