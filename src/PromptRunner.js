@@ -199,7 +199,7 @@ class PromptRunner {
                     type: "input",
                     name: "last_name",
                     message: "Enter employee's last name",
-                    validate: val => this._isValidString(val);
+                    validate: val => this._isValidString(val)
                 },
                 {
                     type: "list",
